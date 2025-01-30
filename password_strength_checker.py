@@ -1,6 +1,6 @@
 import re
 import tkinter as tk
-from tkinter import messagebox
+from tkinter import ttk, messagebox
 
 def check_password_strength(password):
     #deefine criteria
@@ -23,15 +23,15 @@ def check_password_strength(password):
     if special_char_criteria:
         strength += 1
 
-    # feedback
+    #determine feedback
     if strength == 5:
-        return "Very Strong"
+        return "Very Strong", "#4CAF50"  #green
     elif strength >= 3:
-        return "Strong"
+        return "Strong", "#8BC34A"  #light Green
     elif strength >= 2:
-        return "Moderate"
+        return "Moderate", "#FFC107"  #yellow
     else:
-        return "Weak"
+        return "Weak", "#F44336"  #red
 
 def on_submit():
     password = entry.get()
@@ -39,7 +39,8 @@ def on_submit():
         messagebox.showwarning("Input Error", "Please enter a password.")
         return
 
-    strength = check_password_strength(password)
+    strength, color = check_password_strength(password)
+    strength_label.config(text=f"Strength: {strength}", bg=color)
     messagebox.showinfo("Password Strength", f"Your password is: {strength}")
 
 #create the main window
@@ -47,19 +48,43 @@ root = tk.Tk()
 root.title("Password Strength Checker")
 
 #set the window size (width x height)
-root.geometry("400x200")  # Adjust the size as needed
+root.geometry("500x300")  #larger window
+root.configure(bg="#F0F0F0")  #light gray background
+
+#create a custom font
+custom_font = ("Helvetica", 14)
 
 #create a label
-label = tk.Label(root, text="Enter your password:", font=("Arial", 14))
+label = tk.Label(root, text="Enter your password:", font=custom_font, bg="#F0F0F0")
 label.pack(pady=20)
 
 #create an entry widget
-entry = tk.Entry(root, show="*", font=("Arial", 12))
-entry.pack(pady=10)
+entry = tk.Entry(root, show="*", font=custom_font, bd=2, relief="flat")
+entry.pack(pady=10, ipadx=10, ipady=5)
 
 #create a submit button
-submit_button = tk.Button(root, text="Check Strength", command=on_submit, font=("Arial", 12))
+submit_button = tk.Button(
+    root,
+    text="Check Strength",
+    command=on_submit,
+    font=custom_font,
+    bg="#2196F3",  #Blue background
+    fg="white",    #White text
+    bd=0,
+    padx=20,
+    pady=10
+)
 submit_button.pack(pady=20)
+
+#create a label to display strength feedback
+strength_label = tk.Label(
+    root,
+    text="Strength: None",
+    font=custom_font,
+    bg="#F0F0F0",
+    fg="black"
+)
+strength_label.pack(pady=10)
 
 #run the application
 root.mainloop()
